@@ -1,15 +1,44 @@
 <template>
-  <view class="content">
-    <u-button text="月落"></u-button>
-    <u-icon name="photo"></u-icon>
+  <view class="home">
+    <view class="top_nav">
+      <u-tabs
+        :list="navlist"
+        :activeStyle="{
+          color: '#333',
+          fontWeight: 'bold',
+          transform: 'scale(1.08)'
+        }"
+        :inactiveStyle="{
+          color: '#888',
+          transform: 'scale(1)'
+        }"
+      ></u-tabs>
+    </view>
+    <skeleton></skeleton>
+    <view class="content"></view>
+    <u-back-top
+      :scroll-top="scrollTop"
+      top="0"
+      :customStyle="{
+        backgroundColor: '#fff',
+        border: '1rpx solid #0199FE'
+      }"
+    ></u-back-top>
   </view>
 </template>
 
 <script>
 export default {
+  onPageScroll(e) {
+    this.scrollTop = e.scrollTop
+  },
   data() {
     return {
-      title: "Hello"
+      scrollTop: 0,
+      navlist: [
+        { name: "最新" },
+        { name: "热门" }
+      ]
     }
   },
   onLoad() {},
@@ -17,30 +46,8 @@ export default {
 }
 </script>
 
-<style>
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+<style lang="scss" scoped>
+.home {
+  height: 200vh;
 }
 </style>
