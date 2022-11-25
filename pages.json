@@ -1,26 +1,23 @@
 {
   "pages": [{
-      "path": "pages/edit/edit",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
+      "path": "pages/edit/edit"
+      // "style": {
+      //   "navigationBarTitleText": "",
+      //   "enablePullDownRefresh": false
+      // }
     },
     {
       "path": "pages/index/index"
-      // "style": {
-      //   "navigationBarTitleText": "uni-app"
-      // }
     }
   ],
-  "tabBar": {
-    "list": [{
-      "pagePath": "pages/index/index",
-      "text": "圈子",
-      "iconPath": "static/logo.png",
-      "selectedIconPath": "static/logo.png"
-    }]
-  },
+  // "tabBar": {
+  //   "list": [{
+  //     "pagePath": "pages/index/index",
+  //     "text": "圈子",
+  //     "iconPath": "static/logo.png",
+  //     "selectedIconPath": "static/logo.png"
+  //   }]
+  // },
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "圈子",

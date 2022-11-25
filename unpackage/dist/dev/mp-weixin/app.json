@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/edit/edit",
+    "pages/index/index"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "圈子",
+    "navigationBarBackgroundColor": "#0199fe",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}

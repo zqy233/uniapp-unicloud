@@ -7,27 +7,40 @@
         placeholder-class="plactholderClass"
       />
     </view>
-    <view class="content">
-      <editor placeholder="请输入内容"></editor>
-    </view>
+    <editor
+      class="content"
+      id="editor"
+      placeholder="请输入内容"
+      @ready="onEditorReady"
+      @input="onEditorInput"
+    ></editor>
     <view class="btn">
       <u-button type="primary" text="确认发表"></u-button>
     </view>
     <view class="tools">
-      <view class="item">
-        <text class="iconfont icon-zitibiaoti"></text>
+      <view class="item" @click="clickHeader">
+        <text
+          class="iconfont icon-zitibiaoti"
+          :class="headerShow ? 'active' : ''"
+        ></text>
       </view>
-      <view class="item">
-        <text class="iconfont icon-bold"></text>
+      <view class="item" @click="clickBold">
+        <text
+          class="iconfont icon-bold"
+          :class="boldShow ? 'active' : ''"
+        ></text>
       </view>
-      <view class="item">
+      <view class="item" @click="addDivider()">
         <text class="iconfont icon-minus-bold"></text>
       </view>
-      <view class="item">
+      <view class="item" @click="addImg">
         <text class="iconfont icon-icon"></text>
       </view>
-      <view class="item">
-        <text class="iconfont icon-qingxie-"></text>
+      <view class="item" @click="clickItailc">
+        <text
+          class="iconfont icon-qingxie-"
+          :class="boldShow ? 'active' : ''"
+        ></text>
       </view>
       <view class="item">
         <text class="iconfont icon-select-bold"></text>
@@ -39,18 +52,84 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      headerShow: false,
+      boldShow: false,
+      itailcShow: false,
+      img: ""
+    }
+  },
+  methods: {
+    /** 初始化编辑器 */
+    onEditorReady() {
+      // #ifdef APP-PLUS || H5 ||MP-WEIXIN
+      uni
+        .createSelectorQuery()
+        .select("#editor")
+        .context(res => {
+          console.log(res)
+          this.editorCtx = res.context
+        })
+        .exec()
+      // #endif
+    },
+    /** 编辑器输入 */
+    onEditorInput(e) {
+      console.log(e)
+    },
+    /** 添加大标题 */
+    clickHeader() {
+      this.headerShow = !this.headerShow
+      this.editorCtx.format("header", this.headerShow ? "H2" : false)
+    },
+    /** 添加大标题 */
+    clickBold() {
+      this.boldShow = !this.boldShow
+      this.editorCtx.format("bold")
+    },
+    /** 添加图片 */
+    addImg() {
+      uni.chooseImage({
+        success: res => {
+          console.log(res)
+          for (let item of res.tempFiles) {
+            this.editorCtx.insertImage({ src: item.path })
+            // uniCloud
+            //   .uploadFile({
+            //     filePath: item.path,
+            //     cloudPath: item.name
+            //   })
+            //   .then(res => {
+            //     console.log(res)
+            //   })
+          }
+        }
+      })
+    },
+    /** 添加大标题 */
+    clickItailc() {
+      this.headerShow = !this.headerShow
+      this.editorCtx.format("italic")
+    },
+    /** 添加分割线 */
+    addDivider() {
+      this.editorCtx.insertDivider()
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .edit {
-  padding: 30rpx;
+  height: 100%;
+  padding: 30rpx 30rpx 80rpx 30rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   .title {
+    margin-bottom: 30rpx;
     input {
-      margin-bottom: 30rpx;
-      height: 120rpx;
+      height: 80rpx;
       font-size: 36rpx;
       border-bottom: 1px solid #e4e4e4;
     }
@@ -66,8 +145,11 @@ export default {
     font-family: Georgia, "Times New Roman", Times, serif;
   }
   .content {
-    height: calc(100vh - 500rpx);
-    margin-bottom: 30rpx;
+    flex-grow: 1;
+    margin-bottom: 10px;
+  }
+  .btn {
+    margin-bottom: 10px;
   }
   .tools {
     width: 100%;
@@ -78,7 +160,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1rpx solid #f4f4f4;
+    border-top: 1rpx solid #cdcdcd;
     .item {
       flex: 1;
       display: flex;
