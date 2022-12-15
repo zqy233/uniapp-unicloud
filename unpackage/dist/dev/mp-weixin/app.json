@@ -1,12 +1,12 @@
 {
   "pages": [
-    "pages/edit/edit",
-    "pages/index/index"
+    "pages/index/index",
+    "pages/test/test"
   ],
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "圈子",
+    "navigationBarTitleText": "11",
     "navigationBarBackgroundColor": "#0199fe",
     "backgroundColor": "#F8F8F8"
   },

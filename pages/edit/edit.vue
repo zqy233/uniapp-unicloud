@@ -5,6 +5,7 @@
         type="text"
         placeholder="请输入标题"
         placeholder-class="plactholderClass"
+        v-model="artObj.title"
       />
     </view>
     <editor
@@ -13,9 +14,14 @@
       placeholder="请输入内容"
       @ready="onEditorReady"
       @input="onEditorInput"
+      @statuschange="statuschange"
     ></editor>
     <view class="btn">
-      <u-button type="primary" text="确认发表"></u-button>
+      <u-button
+        type="primary"
+        text="确认发表"
+        :disabled="!artObj.title.length"
+      ></u-button>
     </view>
     <view class="tools">
       <view class="item" @click="clickHeader">
@@ -30,7 +36,7 @@
           :class="boldShow ? 'active' : ''"
         ></text>
       </view>
-      <view class="item" @click="addDivider()">
+      <view class="item" @click="addDivider">
         <text class="iconfont icon-minus-bold"></text>
       </view>
       <view class="item" @click="addImg">
@@ -56,7 +62,11 @@ export default {
       headerShow: false,
       boldShow: false,
       itailcShow: false,
-      img: ""
+      artObj: {
+        title: "",
+        content: "",
+        description: ""
+      }
     }
   },
   methods: {
@@ -65,48 +75,61 @@ export default {
       // #ifdef APP-PLUS || H5 ||MP-WEIXIN
       uni
         .createSelectorQuery()
+        .in(this)
         .select("#editor")
         .context(res => {
-          console.log(res)
           this.editorCtx = res.context
         })
         .exec()
       // #endif
     },
+    /** 编辑器样式改变 */
+    statuschange(e) {
+      console.log(e)
+      const { detail } = e
+      this.headerShow = detail.hasOwnProperty("header")
+      this.boldShow = detail.hasOwnProperty("bold")
+      this.itailcShow = detail.hasOwnProperty("itailc")
+      // this.editorCtx.scrollIntoView()
+    },
     /** 编辑器输入 */
     onEditorInput(e) {
       console.log(e)
     },
-    /** 添加大标题 */
+    /** 添加标题 */
     clickHeader() {
       this.headerShow = !this.headerShow
       this.editorCtx.format("header", this.headerShow ? "H2" : false)
+      // setTimeout(() => {
+      // }, 150)
     },
-    /** 添加大标题 */
+    /** 文字加粗 */
     clickBold() {
       this.boldShow = !this.boldShow
-      this.editorCtx.format("bold")
+      this.editorCtx.format("bold", this.boldShow)
+      this.editorCtx.scrollIntoView()
     },
     /** 添加图片 */
     addImg() {
       uni.chooseImage({
-        success: res => {
+        success: async res => {
           console.log(res)
+          uni.showLoading({
+            title: "图片上传中",
+            mask: true
+          })
           for (let item of res.tempFiles) {
-            this.editorCtx.insertImage({ src: item.path })
-            // uniCloud
-            //   .uploadFile({
-            //     filePath: item.path,
-            //     cloudPath: item.name
-            //   })
-            //   .then(res => {
-            //     console.log(res)
-            //   })
+            let res = await uniCloud.uploadFile({
+              filePath: item.path,
+              cloudPath: item.name
+            })
+            this.editorCtx.insertImage({ src: res.fileID })
           }
+          uni.hideLoading()
         }
       })
     },
-    /** 添加大标题 */
+    /** 文字倾斜 */
     clickItailc() {
       this.headerShow = !this.headerShow
       this.editorCtx.format("italic")
@@ -139,7 +162,7 @@ export default {
       font-family: Georgia, "Times New Roman", Times, serif;
     }
   }
-  /deep/ .ql-blank::before {
+  /deep/ .ql-editor.ql-blank::before {
     font-style: normal;
     color: #e0e0e0;
     font-family: Georgia, "Times New Roman", Times, serif;
